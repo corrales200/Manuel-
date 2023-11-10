@@ -1,32 +1,255 @@
-# Prerequisites
-*.d
+#include <iostream> //Carga de iostream para ingreso y salida de datos
+#include <string>
+#include <stdlib.h>
+using namespace std; //usaremos el estandar de datos
+/*
+Iniciamos con las funciones necesarias para ejecutar el ejercicio
+la presente funcion es de tipo void, no retorna datos pero usa
+cout para imprimir el vector, necesita el vector y el tamaño
+para imprimirlo.
+*/
+void ImprimirVector(int vector[], int tamanio) { // in place, sobre la misma estructura
+	cout << "["; // Imprimimos el inicio del vector
+   for (int i = 0; i < tamanio; i++)
+   {// Creamos el ciclo para imprimir los valores del vector
+      if (i < tamanio-1)
+      {
+        cout << vector[i] << ", ";
+      }
+      else
+      {
+        cout << vector[i];
+      }
+   }
+   cout << "]"; // Imprimimos el cierre del vector
+}
+// funcion que nos permite encontrar el punto de inicio
+// tiene como parametros de entrada un vector tipo entero
+// el limite inferior y superior para hacer el pivotee
+int particion(int vector[], int bajo, int alto) {
+    // Seleccionamos el valor alto (posicion) como el pivote
+    int pivote = vector[alto];
+    int temp = 0; // Variable temporal para el intercambio de valores
+    // valor que detalla el elemento mayor
+    int i = (bajo - 1);
+	// Recorremos el vector de bajo a alto y comparamos los valores con el pivote
+    for (int j = bajo; j < alto; j++) {
+		if (vector[j] <= pivote) {
+			// si el elemento en la posicion iterativa es menor
+			// que el pivote, se intercambia por el elemento en la posicion i
+			i++;//Incrementamos la posicion para hacer el intercambio
+			temp = vector[j]; //Creamos la variable temporal
+			vector[j] = vector[i]; //pasamos posicion i a la posicion j
+			vector[i] = temp; //pasamos temp a la posicion i
+		}
+    }
+	// Ahora intercambiamos el pivote con el mayor elemento en i
+    temp = vector[i + 1]; // Asignamos el valor a la variable temporal
+    vector[i + 1] = vector[alto]; // Asignamos el valor en alto a la posicion i+1
+    vector[alto] = temp; //Devolvemos el valor temp a la posicion alto
+    return (i + 1); // retornamos el valor de particion para la siguiente iteracion
+}
+// Funcion quicksort, recibe el vector a ordenar y los limites bajo y alto
+void quickSort(int vector[], int bajo, int alto)
+{ // in place, el vector se ordena desde la funcion para el exterior
+    if (bajo < alto) {//Valida que bajo sea menor que alto
+		// Usando la funcion previa (particion) encontramos el pivote
+        // elementos mas pequeños que el pivote quedan a la izquierda de este
+        // elementos mayores que este quedan a la derecha
+        int pi = particion(vector, bajo, alto);
+        // llamamos de manera recursiva la funcion para la parte iquierda
+		// notese el pi-1
+        quickSort(vector, bajo, pi - 1);
+        // llamamos de manera recursiva la funcion para la parte derecha
+		// notese el pi+1
+        quickSort(vector, pi + 1, alto);
+    }
+}
+float PromedioCategoria(int vector[], int tamanio)
+{// Creamos una funcion que permite calcular el promedio de un vector
+    float promedio = 0;
+    for (int i = 0; i < tamanio; i++)
+    {//Recorremos el vector sumando datos
+        promedio = promedio + vector[i];
+    }
+    promedio = promedio / tamanio; //dividimos por la cantidad de elementos
+    return promedio;
+}
+int CategoriaBaja(int vector[], int tamanio)
+{//Creamos una funcion que permite calcular la cantidad de datos de categoria baja
+    int categoriabaja = 0;
+    // recorremos el vector y contamos cuantos son de dicha categoria
+    for (int i = 0; i < tamanio; i++)
+    {if (vector[i] < 6){categoriabaja = categoriabaja + 1;}}
+    return categoriabaja;
+}
+int CategoriaMedia(int vector[], int tamanio)
+{//Creamos una funcion que permite calcular la cantidad de datos de categoria media
+    int categoriamedia = 0;
+    // recorremos el vector y contamos cuantos son de dicha categoria
+    for (int i = 0; i < tamanio; i++)
+    {if (vector[i] >= 6 && vector[i] < 9){categoriamedia = categoriamedia + 1;}}
+    return categoriamedia;
+}
+int CategoriaAlta(int vector[], int tamanio)
+{//Creamos una funcion que permite calcular la cantidad de datos de categoria alta
+    int categoriaalta = 0;
+    // recorremos el vector y contamos cuantos son de dicha categoria
+    for (int i = 0; i < tamanio; i++)
+    {if (vector[i] >= 9){categoriaalta = categoriaalta + 1;}}
+    return categoriaalta;
+}
+//Creamos una funcion que permite identificar el mayor de tres datos para los promedios
+string OrdenMejorJugador(float a, float b, float c)
+{// Comparamos los datos, este algoritmo determina el ganador de tres opciones
+    if (a>b)
+    {
+        if (a>c)
+        {
+            if (b>c)
+            {
+                return "El jugador del partido es el jugador 1 \"Felicitaciones\", luego el 2 y luego el 3.";
+            }
+            else
+            {
+                return "El jugador del partido es el jugador 1 \"Felicitaciones\", luego el 3 y luego el 2.";
+            }
+        }
+        else
+        {
+            return "El jugador del partido es el jugador 3 \"Felicitaciones\", luego el 1 y luego el 2.";
+        }
+    }
+    else
+    {
+        if (b>c)
+        {
+            if (a>c)
+            {
+                return "El jugador del partido es el jugador 2 \"Felicitaciones\", luego el 1 y luego el 3.";
+            }
+            else
+            {
+                return "El jugador del partido es el jugador 2 \"Felicitaciones\", luego el 3 y luego el 1.";
+            }
+        }
+        else
+        {
+            return "El jugador del partido es el jugador 3 \"Felicitaciones\", luego el 2 y luego el 1.";
+        }
+    }
+}
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+// Codigo main, ejecucion del problema.
+int main() {
+    int conti;
+    do{
+    system("cls");
+	//Creamos los vectores para ingresar las calificaciones de los
+	// futbolistas y periodistas en dicho orden 5 y 5.
+	int jugador1[] = {0,0,0,0,0,0,0,0,0,0};
+	int jugador2[] = {0,0,0,0,0,0,0,0,0,0};
+	int jugador3[] = {0,0,0,0,0,0,0,0,0,0};
+	int a=0, b=0, c=0; //Variables que controlan el ingreso de los valores
+	for (int k = 0; k < 30; k++)
+	{//Creamos un ciclo de 30 valores para ingresar calificaciones
+		if (k < 10) // Primer jugador
+		{
+			cout << "Ingresar la calificacion " << a+1 << " para el jugador 1: ";
+			cin >> jugador1[a];
+			cout << " " << endl;
+			cout << "Registro Ingresado" << endl;
+			a = a + 1;
+		}
+		else if (k < 20)
+		{
+			cout << "Ingresar la calificacion " << b+1 << " para el jugador 2: ";
+			cin >> jugador2[b];
+			cout << " " << endl;
+			cout << "Registro Ingresado" << endl;
+			b = b + 1;
+		}
+		else
+		{
+			cout << "Ingresar la calificacion " << c+1 << " para el jugador 3: ";
+			cin >> jugador3[c];
+			cout << " " << endl;
+			cout << "Registro Ingresado" << endl;
+			c = c + 1;
+		}
+	}
 
-# Precompiled Headers
-*.gch
-*.pch
+	int n = sizeof(jugador1) / sizeof(jugador1[0]);
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+	cout << "Calificaciones no ordenadas" << endl;
+	cout << "Jugador 1 --> " << endl;
+	ImprimirVector(jugador1, n);
+    cout << "" << endl;
+	cout << "---------------------------------------------" << endl;
+	cout << "Jugador 2 --> " << endl;
+	ImprimirVector(jugador2, n);
+    cout << "" << endl;
+	cout << "---------------------------------------------" << endl;
+	cout << "Jugador 3 --> " << endl;
+	ImprimirVector(jugador3, n);
+    cout << "" << endl;
+	cout << "---------------------------------------------" << endl;
+    //Calculamos los promedios y luego mostramos los valores ordenado
+    float promediojugador1 = PromedioCategoria(jugador1, n);
+    float promediojugador2 = PromedioCategoria(jugador2, n);
+    float promediojugador3 = PromedioCategoria(jugador3, n);
+	// Ordenamos los resultados
+	quickSort(jugador1, 0, n - 1);
+	quickSort(jugador2, 0, n - 1);
+	quickSort(jugador3, 0, n - 1);
+	cout << "---------------------------------------------" << endl;
+	cout << "---------------------------------------------" << endl;
+	cout << "Calificaciones ordenadas" << endl;
+	cout << "Jugador 1 --> " << endl;
+	ImprimirVector(jugador1, n);
+    cout << "" << endl;
+    cout << "El promedio del Jugador 1 es de: " << promediojugador1 << endl;
+	cout << "---------------------------------------------" << endl;
+	cout << "Jugador 2 --> " << endl;
+	ImprimirVector(jugador2, n);
+    cout << "" << endl;
+    cout << "El promedio del Jugador 2 es de: " << promediojugador2 << endl;
+	cout << "---------------------------------------------" << endl;
+	cout << "Jugador 3 --> " << endl;
+	ImprimirVector(jugador3, n);
+    cout << "" << endl;
+    cout << "El promedio del Jugador 3 es de: " << promediojugador3 << endl;
+	cout << "---------------------------------------------" << endl;
+    // a continuacion creamos las listas en donde guardaremos los datos de cada jugador
+    // Calculemos el ganador del trofeo iterando posicionalmente todos los vectores al mismo tiempo
+    int j1baja = CategoriaBaja(jugador1, n);
+    int j1media = CategoriaMedia(jugador1, n);
+    int j1alta = CategoriaAlta(jugador1, n);
+    int j2baja = CategoriaBaja(jugador2, n);
+    int j2media = CategoriaMedia(jugador2, n);
+    int j2alta = CategoriaAlta(jugador2, n);
+    int j3baja = CategoriaBaja(jugador3, n);
+    int j3media = CategoriaMedia(jugador3, n);
+    int j3alta = CategoriaAlta(jugador3, n);
+    // al momento ya tenemos las categorias listas y procedemos a encontrar el mayor.
+    // primero buscamos por promedio.
+    string ganador = OrdenMejorJugador(promediojugador1,promediojugador2,promediojugador3);
+    cout << ganador << endl;
+    // En caso de tener empate debemos desempatar los valores usando la categoria.
+    // Creamos un vector con los datos de los jugadores
+    int intcategoriasjugadores[] = {j1baja, j1media, j1alta, j2baja, j2media, j2alta, j3baja, j3media, j3alta};
+    //Ordenamos el vector de categorias de jugadores y luego tomamos el mayor valor el cual es la posicion 8
+    int m = sizeof(intcategoriasjugadores) / sizeof(intcategoriasjugadores[0]);
+    quickSort(intcategoriasjugadores, 0, m - 1);
+    cout << "---------------------------------------------" << endl;
+    cout << "---------------------------------------------" << endl;
+    cout << "La mayor cantidad de votaciones se encuentra con una repeticion de: " << intcategoriasjugadores[m-1] << endl;
+    cout << "---------------------------------------------" << endl;
+    cout << "Gracias por participar." << endl;
+    cout << "Deseas volver a empezar?"<<endl;
+    cout << "         1 - Si"<<endl;
+    cout << "         2 - No"<<endl;
+    cin >> conti;
+    }while(conti == 1);
+    return 0;
+}
